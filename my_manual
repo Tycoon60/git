@@ -1,8 +1,5 @@
 Git - управление версиями файлов
 
-https://github.com Tycoon60 1F
-ubuntu server 20.04
-
 Установка:
 apt install git -y
 
