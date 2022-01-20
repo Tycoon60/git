@@ -1,0 +1,125 @@
+Git - управление версиями файлов
+
+https://github.com Tycoon60 1F
+ubuntu server 20.04
+
+Установка:
+apt install git -y
+
+Узнать версию:
+git --version
+
+1) Конфигурация .gitconfig:
+git config --global user.name "tycoon60"
+git config --global user.email "tycoon60@rambler.ru"
+
+Просмотреть конфиг
+git config -l
+
+2) Работа с Local Repository (локальные копии файлов)
+Создадим папку для проекта и укажем её для работы(отслеживания) с git:
+mkdir myprojectgit && git init /home/myprojectgit
+
+Проверить статус проекта: git status
+
+Например создадим файл и проверим статус, система напишит что увидела файл:
+echo "Source file1" > file.txt && git status
+
+3) Подготовить файлы к созданию снимка: 
+git add *, где *  - все файлы. или git add .
+git status
+
+4) Создать версию снимка файлов в нашей директории
+git commit -m "My Initial commint, this is Version1.0"
+git status
+
+5) Отредактируем файл, проверим статус и увидим что git видит что файл был изменен:
+echo "Source file1" > file.txt && git status
+
+6) Подготовим файлы к новому снимку: git add file.txt && git status
+7) Создать снимок изменённого файла комментарием: git commit -m "update file" && git status
+8) Лог изменений: git log
+Просмотреть информацию о последнем изменении файлов в директории: git log -1
+Просмотерть сами изменения в последнем логе: git log -1 -p
+
+9) Вернуть состояние файла после изменения, но прежде чем он будет подготовлен к снимку:
+git checkout -- file.txt или git restore file.txt
+
+10) Просмотреть какие будут внесены изменения после подготовки, но перед снимком:
+git diff --staged
+
+11) Игнорировать файл или директорию проекта:
+nano .gitignore, в файл пишем например 123.txt, *.log, на следующей строке название папки 11/
+файл .gitignore добавляется в репозиторий.
+
+12) Создать папку для проекта в githab:
+https://www.youtube.com/watch?v=6N6JFynR0gM&list=PLg5SS_4L6LYstwxTEOU05E0URTHnbtA0l&index=8
+
+13) Cклонировать чей либо проект:
+git clone https://github.com/Tycoon60/myproject1.git
+
+14) Залить файл на свой репозитори в интернет
+Необходимо создать токин авторизации:
+Settings - Developer settings - Personal access tokens - Generate new token, даём название токена, указываем срок действия,
+указываем для чего он, в данном случае для работы с репозиториями, поэтому выбираем repo. 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
+Далее как обычно подготавливаем, создаем клон и заливаем git push origin, спросит логин и ключ (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)
+
+Так же можно сделать доступ по ssh:
+ssh-keygen && cat ~/.ssh/id_rsa.pub
+Settings - SSH and GPG keys- New SSH key, вставляем ключ.
+Если проект из репозитория был ранее склонирован не по ssh ключу, то скорее всего он использовал протокол https:
+git remote -v, для работы по ssh этот протокол надо изменить: git remote set-url origin git@github.com:Tycoon60/test.git
+
+15) Ветвление (Branch)
+Изначально по умолчанию есть основное ветвление файла, это ветвление называется main или master, это эталон рабочей программы. 
+Например эталон (main) имеет версию Version 3.0, нашлась ошибка, программисты создают ответление (git checkout -b fix_error) и вносят туда изменения и
+называют Version 4.0. Если переключится на основное ветвление и просмотреть файл кода, то он будет Version 3.0, если переключится на ветвление fix_error и 
+просмотреть тот же файл то он будет с изменениями Version 4.0. После того как программысти убедились что ошибка исправлена можно влить это исправление
+в эталон, т.е. соединить fix_error с main(git merge fix_error). После этого версия файла эталона будет Version 4.0. После слияния ответвление fix_error можно
+удалить.
+Если создано ответвление, оно подготовлено и добавлено в репозиторий, но проводить слияние не стали и решили это ветвление удалить то в таком случае
+удаление ветвление происходит командой:git branch -D fix_error
+
+Показать ветвления: git branch
+Создать ветвление: git branch fix_error
+Создать ветвление и выбрать его по умолчанию: git checkout -b fix_error
+Сделать ветвление основным: git checkout fix_error
+Сделать mail (master) ветку основной: git checkout main
+Стереть ветвление: git branch -d fix_error
+Соединить вторичное ветвление с основным: git merge fix_error
+echo "Source file1" > file11.txt && git status && git add . && git commit -m "Version 1.0"
+echo "Source file2" > file11.txt && git status && git add . && git commit -m "Version 2.0"
+echo "Source file3" > file11.txt && git status && git add . && git commit -m "Version 3.0"
+echo "Source file4" > file11.txt && git status && git add . && git commit -m "Version 4.0"
+
+16) Возврат на предыдушие версии после снимка:
+Текущая версия Version 4.0, нужно посмотреть что было в Version 2.0:
+Смотрим кэш commit нужной нам версии в git log, копируем его:
+git checkout 6a88c4e479b2c000e127c68263773b6ecada7536
+Посмотрели что было в файле и теперь надо вернутся к последней версии Version 4.0:
+git checkout main
+
+17) Изменить commit, не создавая новой версии:
+изменим файл: echo "Source file5" > file11.txt
+изменим версию: git commit --amend и редактируем
+git log
+
+18) Вернутся на 2 версию и убрать 3 и 4 полностью:
+git reset --hard HEAD~2
+
+19) Убрать из лог файла все commit кроме первого, вернутся к первой версии но с файлом последней версии:
+git reset --soft HEAD~1
+Указанная после HEAD цифра, это количество commit, которых надо стереть начиная сверху.
+
+
+Полный рабочий цикл.
+1) Склонировали проект
+2) Создали своё ответвление и переключаемся на него: git checkout -b tycoon_task001
+3) Что то изменили в коде, подготовили к снимку, сделали копию локально и отправили на github: git add . && git commit -m "New test Version 1.0" && git push origin
+ругнётся что в github нет такого (tycoon_task001) ответвления, для добавления отвевления необходимо выполнить команду:
+git push --set-upstream origin tycoon_task001
+4) Зайти на свой github и попросить проверить код (Compare & pull request), написать комментарий (что сделано вкратце) в форме прошения и нажимаем Create pull request, если всё нормально то мой код утверждается и соединяется с main (master).
+5) Теперь можно удалить ответвление у себя в локальном дипозитории и в github: git checkout main && git branch && git branch -d tycoon_task001 && git branch
+git push origin --delete tycoon_task001
+Автоматизация (github actions)
+Включение автоматизации происходит добавлением файлов YAML в специальную директорию .github/workflows/ в вашем репозитории.
